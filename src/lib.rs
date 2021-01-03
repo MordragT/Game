@@ -8,13 +8,26 @@ pub mod item;
 pub mod task;
 
 use bevy::prelude::*;
+use std::fmt;
 // use item::Item;
 // use task::{Task, TaskState};
 
 #[derive(Debug)]
 pub struct Name<'a>(pub &'a str);
+
+impl<'a> fmt::Display for Name<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.0)
+    }
+}
 #[derive(Debug)]
 pub struct Description<'a>(pub &'a str);
+
+impl<'a> fmt::Display for Description<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.0)
+    }
+}
 
 // pub enum Requirement {
 //     Inventory(Box<dyn Fn(&Item, &Owner) -> bool + Send + Sync>),
@@ -27,6 +40,11 @@ pub struct Description<'a>(pub &'a str);
 //     LooseItem,
 //     GetExperience,
 // }
+
+pub trait GetEntity<R> {
+    fn entity(&self, resource: &R) -> Entity;
+}
+
 #[derive(Debug, Default)]
 pub struct Owners {
     pub player: Option<Entity>,
@@ -49,11 +67,11 @@ pub enum Owner {
     Diego,
 }
 
-impl Owner {
-    pub fn entity(&self, owners: &Owners) -> Entity {
+impl GetEntity<Owners> for Owner {
+    fn entity(&self, resource: &Owners) -> Entity {
         match &self {
-            Owner::Player => owners.player(),
-            Owner::Diego => owners.diego(),
+            Owner::Player => resource.player(),
+            Owner::Diego => resource.diego(),
         }
     }
 }

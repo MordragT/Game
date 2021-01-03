@@ -20,13 +20,14 @@ pub enum PlayerEvent {
     QuickAccess,
 }
 
-pub struct ShowTasksEvent;
+pub struct OpenLogEvent;
 
 pub fn input(
     mut state: Local<KeyState>,
     input_events: Res<Events<ReceivedCharacter>>,
     mut open_inv: ResMut<Events<OpenInventoryEvent>>,
     mut transform_human: ResMut<Events<TransformHumanEvent>>,
+    mut open_log: ResMut<Events<OpenLogEvent>>,
 ) {
     for event in state.event_reader.iter(&input_events) {
         match event.char {
@@ -38,6 +39,7 @@ pub fn input(
             ' ' => transform_human.send(TransformHumanEvent::Jump(Owner::Player)), //jump
             'e' | 'E' => (),                                                       //interact
             'q' | 'Q' => (),                                                       //quickaccess
+            'l' | 'L' => open_log.send(OpenLogEvent),
             i => println!("No action: {}", i),
         }
     }

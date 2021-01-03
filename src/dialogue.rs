@@ -104,4 +104,11 @@ pub fn add_dialougues(commands: &mut Commands, owners: Res<Owners>) {
             state: DialogueState::Active,
         },
     );
+    commands.insert(
+        owners.diego(),
+        DialogueBundle {
+            option: "Can you train me?",
+            state: DialogueState::Active,
+        },
+    );
 }
